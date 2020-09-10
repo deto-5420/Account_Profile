@@ -21,28 +21,7 @@ jwt_response_payload_handler    = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 
 from django.contrib.auth.models import User
 
-# class AuthAPIView(APIView):
-#     permission_classes      = [AnonPermissionOnly]
-#     def post(self, request, *args, **kwargs):
-#         print(request.user)
-#         if request.user.is_authenticated():
-#             return Response({'detail': 'You are already authenticated'}, status=400)
-#         data = request.data
-#         username = data.get('username') # username or email address
-        
-#         password = data.get('password')
-#         qs = User.objects.filter(Q(username__iexact=username)|Q(email__iexact=username)).distinct()
-        
-#         if qs:
-#             user_obj = qs.first()
-#             if user_obj.check_password(password):
-#                 user = user_obj
-#                 payload = jwt_payload_handler(user)
-#                 token = jwt_encode_handler(payload)
-#                 response = jwt_response_payload_handler(token, user, request=request)
-#                 return Response(response)
 
-#       return Response({"detail": "Invalid credentials"}, status=401)
 # Create your views here.
 class RegisterAPIView(generics.CreateAPIView):
     queryset                = User.objects.all()
@@ -55,31 +34,6 @@ class RegisterAPIView(generics.CreateAPIView):
 #needs JWT Token as header and in body  phone and image(optional)
 #will return profile data for a authorised user
 
-class ProfileAPIView(APIView,
-                     mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.UpdateModelMixin):
-    #permission_classes          =[permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
-    serializer_class            = UserProfileSerializer
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def patch(self, request, *args, **kwargs):
-
-        user = request.user
-
-        phone = request.data.get('phone')#must be starting with 91 and of 10 digits
-        image = request.data.get('image')
-
-        
-        profile.phone = phone
-        profile.image = image
-
-        profile.save()
-
-        data = UserProfileSerializer(profile).data
-
-        return Response({'body':data}, status=HTTP_200_OK)
 
 
 class UpdateProfile(APIView):
@@ -135,4 +89,52 @@ class Login(APIView):
             
 
         return Response({"detail": "Invalid credentials"}, status=401)
+# class AuthAPIView(APIView):
+#     permission_classes      = [AnonPermissionOnly]
+#     def post(self, request, *args, **kwargs):
+#         print(request.user)
+#         if request.user.is_authenticated():
+#             return Response({'detail': 'You are already authenticated'}, status=400)
+#         data = request.data
+#         username = data.get('username') # username or email address
+        
+#         password = data.get('password')
+#         qs = User.objects.filter(Q(username__iexact=username)|Q(email__iexact=username)).distinct()
+        
+#         if qs:
+#             user_obj = qs.first()
+#             if user_obj.check_password(password):
+#                 user = user_obj
+#                 payload = jwt_payload_handler(user)
+#                 token = jwt_encode_handler(payload)
+#                 response = jwt_response_payload_handler(token, user, request=request)
+#                 return Response(response)
+
+#       return Response({"detail": "Invalid credentials"}, status=401)
+# class ProfileAPIView(APIView,
+#                      mixins.ListModelMixin,
+#                      mixins.RetrieveModelMixin,
+#                      mixins.UpdateModelMixin):
+#     #permission_classes          =[permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+#     serializer_class            = UserProfileSerializer
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
+
+#     def patch(self, request, *args, **kwargs):
+
+#         user = request.user
+
+#         phone = request.data.get('phone')#must be starting with 91 and of 10 digits
+#         image = request.data.get('image')
+
+        
+#         profile.phone = phone
+#         profile.image = image
+
+#         profile.save()
+
+#         data = UserProfileSerializer(profile).data
+
+#         return Response({'body':data}, status=HTTP_200_OK)
+
     
