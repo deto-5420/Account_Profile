@@ -51,6 +51,10 @@ class RegisterAPIView(generics.CreateAPIView):
 
     def get_serializer_context(self, *args, **kwargs):
         return {"request": self.request}
+
+#needs JWT Token as header and in body  phone and image(optional)
+#will return profile data for a authorised user
+
 class ProfileAPIView(APIView,
                      mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
@@ -64,7 +68,7 @@ class ProfileAPIView(APIView,
 
         user = request.user
 
-        phone = request.data.get('phone')
+        phone = request.data.get('phone')#must be starting with 91 and of 10 digits
         image = request.data.get('image')
 
         
@@ -104,6 +108,7 @@ class UpdateProfile(APIView):
 
         return Response({"body":data}, status=200)
 #return JWT KEY if the user is authenticated 
+#needs username or email and password from body
 class Login(APIView):
 
     permission_classes      = [AnonPermissionOnly]
